@@ -3,7 +3,9 @@ let position = null;
 let watchId;
 
 let map;
+let userMarker;
 const MAP_ZOOM = 16;
+let initialUpdate = true;
 
 const LOCATION_OPTIONS = {
     enableHighAccuracy: true,
@@ -14,7 +16,11 @@ const updateLocation = () => {
     const locationSpan = document.getElementById('location');
     if (position) {
         locationSpan.innerHTML = `(${position.coords.latitude}, ${position.coords.longitude})`;
-        map.setView([position.coords.latitude, position.coords.longitude], MAP_ZOOM);
+        if (initialUpdate) {
+            map.setView([position.coords.latitude, position.coords.longitude], MAP_ZOOM);
+            initialUpdate = false;
+        }
+        userMarker.setLatLng([position.coords.latitude, position.coords.longitude]);
     }
     else {
         locationSpan.innerHTML = 'Unknown';
@@ -57,4 +63,5 @@ document.addEventListener("DOMContentLoaded", (event) => {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> - Fernando Rocha'
     }).addTo(map);
+    userMarker = L.marker([41.17770, -8.60196]).addTo(map);
 });
